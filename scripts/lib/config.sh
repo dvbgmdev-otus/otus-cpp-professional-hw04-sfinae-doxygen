@@ -12,6 +12,10 @@ fi
 if [[ -z "${__CONFIG_SH_INCLUDED:-}" ]]; then
     readonly __CONFIG_SH_INCLUDED=1
 
+    # Имя проекта (используется для названия бинарника)
+    # shellcheck disable=SC2034
+    readonly PROJECT_NAME="otus_sfinae"
+
     # директория, в которой лежат все библиотеки (scripts/lib)
     LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)" 
     # shellcheck disable=SC2034
@@ -38,10 +42,6 @@ if [[ -z "${__CONFIG_SH_INCLUDED:-}" ]]; then
     # Директория для сборки проекта
     # shellcheck disable=SC2034
     readonly BUILD_DIR="$PROJECT_ROOT/build"
-
-    # Имя проекта (используется для названия бинарника)
-    # shellcheck disable=SC2034
-    readonly PROJECT_NAME="otus_allocator"
 
     # Директория с бинарниками
     # shellcheck disable=SC2034
