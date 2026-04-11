@@ -12,10 +12,6 @@ fi
 if [[ -z "${__CONFIG_SH_INCLUDED:-}" ]]; then
     readonly __CONFIG_SH_INCLUDED=1
 
-    # Имя проекта (используется для названия бинарника)
-    # shellcheck disable=SC2034
-    readonly PROJECT_NAME="otus_sfinae"
-
     # директория, в которой лежат все библиотеки (scripts/lib)
     LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)" 
     # shellcheck disable=SC2034
@@ -47,9 +43,9 @@ if [[ -z "${__CONFIG_SH_INCLUDED:-}" ]]; then
     # shellcheck disable=SC2034
     readonly BIN_DIR="$BUILD_DIR/bin"
 
-    # Бинарник проекта
+    # Файл с именем основного бинарника, генерируется CMake
     # shellcheck disable=SC2034
-    readonly BIN_PATH="$BIN_DIR/$PROJECT_NAME"
+    readonly PROJECT_BINARY_NAME_FILE="$BUILD_DIR/project_binary_name.txt"
     
     # Отступы для логирования (используются в других скриптах)
     # shellcheck disable=SC2034

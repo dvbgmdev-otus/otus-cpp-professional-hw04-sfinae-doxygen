@@ -78,6 +78,14 @@ if(1) # MAIN APPLICATION BLOCK
     endif()
 endif()
 
+if(1) # PROJECT METADATA BLOCK
+    # Генерация файла с именем бинарного файла (нужно будет для скриптов)
+    file(GENERATE
+        OUTPUT "${CMAKE_BINARY_DIR}/project_binary_name.txt"
+        CONTENT "${PROJECT_NAME}\n"
+    )
+endif()
+
 if(1) # ACTIVATE BUILD TESTS BLOCK
     if (BUILD_TESTING)
         enable_testing()
