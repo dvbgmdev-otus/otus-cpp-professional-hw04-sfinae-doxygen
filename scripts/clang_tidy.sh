@@ -57,13 +57,74 @@ source "$LIB_DIR/logging.sh"
 # shellcheck disable=SC1091
 source "$LIB_DIR/docker.sh"
 
-# ---- Установка конфигурации ----
-set_config() {
-    # Режим clang-tidy:
-    #   light   — минимальный, почти без шума (по умолчанию)
-    #   medium  — расширенный анализ
-    #   strict  — жёсткий аудит
-    CLANG_TIDY_MODE=${CLANG_TIDY_MODE:-light}
+# ---- Информация об использовании ----
+usage() {
+cat <<'EOF'
+Usage:
+  ./scripts/clang_tidy.sh [--light|--medium|--strict] [file ...]
+  ./scripts/clang_tidy.sh --help
+
+Modes:
+  --light    Minimal low-noise analysis (default)
+  --medium   Extended analysis
+  --strict   Aggressive audit
+
+Examples:
+  ./scripts/clang_tidy.sh
+  ./scripts/clang_tidy.sh --medium
+  ./scripts/clang_tidy.sh --strict src/main.cpp
+  ./scripts/clang_tidy.sh --medium -- src/main.cpp src/foo.cpp
+EOF
+}
+
+# ---- Парсинг аргументов ----
+parse_args() {
+    local mode_from_cli=""
+
+    TARGET_ARGS=()
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --light|--medium|--strict)
+                local new_mode="${1#--}"
+
+                if [[ -n "$mode_from_cli" && "$mode_from_cli" != "$new_mode" ]]; then
+                    log_error "Only one mode may be specified" "$LOG_INDENT"
+                    exit 1
+                fi
+
+                mode_from_cli="$new_mode"
+                shift
+                ;;
+            --help|-h)
+                usage
+                exit 0
+                ;;
+            --)
+                shift
+                while [[ $# -gt 0 ]]; do
+                    TARGET_ARGS+=("$1")
+                    shift
+                done
+                break
+                ;;
+            -*)
+                log_error "Unknown option: $1" "$LOG_INDENT"
+                usage >&2
+                exit 1
+                ;;
+            *)
+                TARGET_ARGS+=("$1")
+                shift
+                ;;
+        esac
+    done
+
+    if [[ -n "$mode_from_cli" ]]; then
+        CLANG_TIDY_MODE="$mode_from_cli"
+    else
+        CLANG_TIDY_MODE="${CLANG_TIDY_MODE:-light}"
+    fi
 }
 
 # Команда для получения подсказки по генерации compile_commands.json
@@ -200,21 +261,25 @@ set_targets() {
     TARGETS=()
 
     # Если файлы переданы аргументами — используем их
-    if [[ $# -gt 0 ]]; then
-        for file in "$@"; do
+    if [[ ${#TARGET_ARGS[@]} -gt 0 ]]; then
+        for file in "${TARGET_ARGS[@]}"; do
             if [[ ! -f "$file" ]]; then
                 log_error "File not found: $file" "$LOG_INDENT"
                 exit 1
             fi
             TARGETS+=("$file")
         done
-        return
+    else
+        # Иначе — анализируем все .cpp в src
+        while IFS= read -r file; do
+            TARGETS+=("$file")
+        done < <(find src -type f -name '*.cpp' | sort)
     fi
 
-    # Иначе — анализируем все .cpp в src
-    while IFS= read -r file; do
-        TARGETS+=("$file")
-    done < <(find src -type f -name '*.cpp')
+    if [[ ${#TARGETS[@]} -eq 0 ]]; then
+        log_error "No target files found for clang-tidy" "$LOG_INDENT"
+        exit 1
+    fi
 }
 
 run_clang_tidy() {
@@ -246,14 +311,14 @@ run_clang_tidy_native() {
 }
 
 main() {
-    set_config
+    parse_args "$@"
 
     if is_inside_docker; then
         check_environment
         set_clang_tidy_checks
         select_clang_tidy_profile
         set_clang_tidy_flags
-        set_targets "$@"
+        set_targets
         run_clang_tidy_native
         return
     fi
