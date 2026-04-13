@@ -43,6 +43,10 @@ if [[ -z "${__CONFIG_SH_INCLUDED:-}" ]]; then
     # shellcheck disable=SC2034
     readonly BIN_DIR="$BUILD_DIR/bin"
 
+    # Директория с тестовыми бинарниками
+    # shellcheck disable=SC2034
+    readonly TEST_BIN_DIR="$BIN_DIR/tests"
+
     # Файл с именем основного бинарника, генерируется CMake
     # shellcheck disable=SC2034
     readonly PROJECT_BINARY_NAME_FILE="$BUILD_DIR/project_binary_name.txt"

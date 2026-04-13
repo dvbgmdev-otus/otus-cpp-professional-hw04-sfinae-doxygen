@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     git \
     libboost-test-dev \
     clang-tidy \
+    lcov \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

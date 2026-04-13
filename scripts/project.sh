@@ -29,6 +29,7 @@ Commands:
   build    Build project
   test     Run tests
   run      Run application
+  cov      Run coverage report
   clean    Remove build artifacts
   cppcheck Run static analysis with Cppcheck
   tidy     Run static analysis with clang-tidy
@@ -38,6 +39,7 @@ Examples:
   ./scripts/project.sh build
   ./scripts/project.sh test
   ./scripts/project.sh run
+  ./scripts/project.sh cov
   ./scripts/project.sh cppcheck
   ./scripts/project.sh tidy
   ./scripts/project.sh clean
@@ -68,6 +70,10 @@ main() {
             shift
             "$SCRIPT_DIR/build.sh" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
             exec "$SCRIPT_DIR/clang_tidy.sh" "$@"
+            ;;
+        cov)
+            shift
+            exec "$SCRIPT_DIR/cov.sh" "$@"
             ;;
         clean)
             shift
