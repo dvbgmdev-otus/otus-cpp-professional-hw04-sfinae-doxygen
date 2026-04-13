@@ -10,8 +10,8 @@ if(1) # PROJECT CONFIG BLOCK
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
     # === Путь до исходников ===
     set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
-    # Корень покрываемых исходников — на уровень выше
-    get_filename_component(COVERAGE_BASE_DIR "${SRC_DIR}" DIRECTORY)
+    # Корень покрываемых исходников
+    set(COVERAGE_BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
     set(PROJECT_INCLUDE_DIR
         ${SRC_DIR}
@@ -32,6 +32,10 @@ if(1) # CORE LIBRARY BLOCK
     set(CORE_SRC ${CORE_NAME}_SRC)
 
     set(${CORE_SRC}
+        ${SRC_DIR}/app.cpp
+    )
+
+    set(COVERAGE_SRC
         ${SRC_DIR}/app.cpp
     )
 
@@ -66,7 +70,10 @@ if(1) # MAIN APPLICATION BLOCK
         target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_DEBUG_LOG)
     endif()
 
+    list(APPEND COVERAGE_SRC ${SRC_DIR}/main.cpp)
+
     if (BUILD_COVERAGE)
+        target_compile_options(${PROJECT_NAME} PRIVATE ${COVERAGE_COMPILE_FLAGS})
         if (CMAKE_VERSION VERSION_GREATER "3.13" OR
             CMAKE_VERSION VERSION_EQUAL "3.13")
             target_link_options(${PROJECT_NAME} PRIVATE ${COVERAGE_LINK_FLAGS})

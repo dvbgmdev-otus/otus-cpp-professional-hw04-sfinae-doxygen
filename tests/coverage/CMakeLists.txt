@@ -1,18 +1,15 @@
 # ==========================================
-# @file tests/coverage/CMakeLists.txt
+# @file /coverage/CMakeLists.txt
 # Coverage subsystem
 # ==========================================
 
 message(STATUS "")
 message(STATUS ">>>>> CONFIGURING COVERAGE SUBSYSTEM <<<<<")
 
-# --- Получаем исходники библиотеки ---
-# get_target_property(${CORE_SRC} ${CORE_NAME} SOURCES)
-
 # --- Создаем список файлов для coverage ---
 set(COVERAGE_LIST_FILE "${CMAKE_BINARY_DIR}/coverage_file_list.txt")
 file(WRITE "${COVERAGE_LIST_FILE}" "")
-foreach(f ${${CORE_SRC}})
+foreach(f ${COVERAGE_SRC})
     get_filename_component(abs_f "${f}" REALPATH BASE_DIR "${CMAKE_SOURCE_DIR}")
     file(APPEND "${COVERAGE_LIST_FILE}" "${abs_f}\n")
 endforeach()
