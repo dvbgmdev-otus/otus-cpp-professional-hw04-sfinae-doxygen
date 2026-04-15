@@ -3,8 +3,19 @@
 #include "debug_log.h"
 #include "print_ip.h"
 
+/** @file main.cpp
+ *  @brief Демонстрационный прикладной код проекта print_ip.
+ */
+
 using namespace ip;
 
+/** @brief Точка входа демонстрационного приложения.
+ *
+ *  Вызывает `print_ip` для всех поддерживаемых представлений
+ *  условного IP-адреса.
+ *
+ *  @return Код завершения приложения.
+ */
 int main() {
     DEBUG_LOG("Application started");
 

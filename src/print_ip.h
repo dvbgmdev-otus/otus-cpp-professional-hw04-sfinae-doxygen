@@ -5,15 +5,24 @@
 #include <iostream>
 #include <type_traits>
 
-#include "ip_traits.h"
 #include "ip_detail.h"
+#include "ip_traits.h"
+
+/** @file print_ip.h
+ *  @brief Шаблонные перегрузки функции print_ip для различных представлений условного IP-адреса.
+ */
 
 namespace ip {
 
-// ============================================================
-// print_ip for integral types
-// Вывод: беззнаково, побайтово, от старшего байта к младшему
-// ============================================================
+/** @ingroup public_api
+ *  @brief Выводит условный IP-адрес, представленный целочисленным типом.
+ *
+ *  Значение выводится побайтово в беззнаковом виде, начиная со старшего байта.
+ *  Все байты разделяются символом точки (`.`).
+ *
+ *  @tparam T тип параметра.
+ *  @param value значение для вывода.
+ */
 template <typename T, typename std::enable_if<traits::is_integral<T>::value, int>::type = 0>
 void print_ip(const T& value) {
     using unsigned_type = typename std::make_unsigned<T>::type;
@@ -35,19 +44,22 @@ void print_ip(const T& value) {
     std::cout << std::endl;
 }
 
-// ============================================================
-// print_ip for std::string
-// Вывод: строка как есть
-// ============================================================
+/** @ingroup public_api
+ *  @brief Выводит условный IP-адрес, представленный строкой.
+ *
+ *  Строковое значение выводится без изменений.
+ */
 template <typename T, typename std::enable_if<traits::is_string<T>::value, int>::type = 0>
 void print_ip(const T& value) {
     std::cout << value << std::endl;
 }
 
-// ============================================================
-// print_ip for supported containers (std::vector и std::list)
-// Вывод: элементы контейнера, разделенные точкой
-// ============================================================
+/** @ingroup public_api
+ *  @brief Выводит условный IP-адрес, представленный поддерживаемым контейнером.
+ *
+ *  Поддерживаются контейнеры `std::vector` и `std::list`.
+ *  Элементы контейнера выводятся по порядку и разделяются символом точки (`.`).
+ */
 template <typename T,
           typename std::enable_if<traits::is_supported_container<T>::value, int>::type = 0>
 void print_ip(const T& value) {
@@ -66,10 +78,13 @@ void print_ip(const T& value) {
     std::cout << std::endl;
 }
 
-// ============================================================
-// print_ip for tuples with all elements of the same type
-// Вывод: элементы кортежа, разделенные точкой
-// ============================================================
+/** @ingroup public_api
+ *  @brief Выводит условный IP-адрес, представленный однородным кортежем.
+ *
+ *  Элементы кортежа выводятся по порядку и разделяются символом точки (`.`).
+ *  Перегрузка доступна только для `std::tuple`, все элементы которого имеют
+ *  одинаковый тип.
+ */
 template <typename T,
           typename std::enable_if<traits::is_homogeneous_tuple<T>::value, int>::type = 0>
 void print_ip(const T& value) {
