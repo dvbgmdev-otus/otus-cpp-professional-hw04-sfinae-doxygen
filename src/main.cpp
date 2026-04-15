@@ -1,18 +1,12 @@
 #include <string>
 
-#include "app.h"
 #include "debug_log.h"
 #include "print_ip.h"
 
 using namespace ip;
 
-int main(int argc, char* argv[]) {
-    (void)argc;  // чтобы не было предупреждения о неиспользуемой переменной
-    (void)argv;  // чтобы не было предупреждения о неиспользуемой переменной
+int main() {
     DEBUG_LOG("Application started");
-    // if (argc > 1 && std::string(argv[1]) == "--test") {
-    //     return runTestMode();
-    // }
 
     // если инты, то выводим побайтно безнаково, начиная со старшего байта, разделяя байты точкой.
     print_ip(int8_t{ -1 });                    // 255
@@ -28,6 +22,5 @@ int main(int argc, char* argv[]) {
     // точкой. если кортеж состоит из элементов разных типов, то не компилируем код с ошибкой.
     print_ip(std::make_tuple(123, 456, 789, 0));  // 123.456.789.0
 
-    // return runTaskMode();
     return 0;
 }
