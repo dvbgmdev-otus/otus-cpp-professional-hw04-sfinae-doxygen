@@ -43,6 +43,28 @@ void print_ip(const T& value) {
     std::cout << value << std::endl;
 }
 
+// ============================================================
+// print_ip for supported containers (std::vector и std::list)
+// Вывод: элементы контейнера, разделенные точкой
+// ============================================================
+template <typename T,
+          typename std::enable_if<traits::is_supported_container<T>::value, int>::type = 0>
+void print_ip(const T& value) {
+    auto it = value.begin();
+    const auto end = value.end();
+
+    if (it != end) {
+        std::cout << *it;
+        ++it;
+    }
+
+    for (; it != end; ++it) {
+        std::cout << '.' << *it;
+    }
+
+    std::cout << std::endl;
+}
+
 }  // namespace ip
 
 #endif  // PRINT_IP_H
