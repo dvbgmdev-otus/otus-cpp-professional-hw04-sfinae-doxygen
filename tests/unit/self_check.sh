@@ -8,7 +8,7 @@ source "$SCRIPT_DIR/../../scripts/lib/config.sh"
 # shellcheck disable=SC1091
 source "$LIB_DIR/logging.sh"
 
-BINARY="$BIN_DIR/otus_sfinae"
+BINARY="$BIN_DIR/print_ip"
 
 check_output() {
     local name="$1"
