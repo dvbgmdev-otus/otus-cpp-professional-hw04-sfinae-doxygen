@@ -4,7 +4,7 @@ if(1) # PROJECT CONFIG BLOCK
 
     set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 
-    project(otus_sfinae VERSION 0.0.${PATCH_VERSION})
+    project(print_ip VERSION 0.0.${PATCH_VERSION})
 
     # === Путь для модулей CMake ===
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
