@@ -68,7 +68,7 @@ jobs:
 
       - name: Generate documentation
         working-directory: doxygen
-        run: doxygen doxygen/Doxyfile
+        run: doxygen Doxyfile
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
