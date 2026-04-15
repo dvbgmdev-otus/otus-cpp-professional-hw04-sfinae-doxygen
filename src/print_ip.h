@@ -39,6 +39,15 @@ void print_ip(const T& value)
     std::cout << std::endl;
 }
 
+// ============================================================
+// print_ip for std::string
+// Вывод: строка как есть
+// ============================================================
+template <typename T, typename std::enable_if<traits::is_string<T>::value, int>::type = 0>
+void print_ip(const T& value) {
+    std::cout << value << std::endl;
+}
+
 }  // namespace ip
 
 #endif  // PRINT_IP_H

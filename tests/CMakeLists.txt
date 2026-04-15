@@ -44,7 +44,7 @@ include(GoogleTest)
 add_unit_test(otus_sfinae_test
     # ${UNIT_TEST_DIR}/container_test.cpp
     ${UNIT_TEST_DIR}/int_test.cpp
-    # ${UNIT_TEST_DIR}/string_test.cpp
+    ${UNIT_TEST_DIR}/string_test.cpp
     # ${UNIT_TEST_DIR}/tuple_test.cpp
 )
 
