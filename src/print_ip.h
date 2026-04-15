@@ -6,6 +6,7 @@
 #include <type_traits>
 
 #include "ip_traits.h"
+#include "ip_detail.h"
 
 namespace ip {
 
@@ -62,6 +63,17 @@ void print_ip(const T& value) {
         std::cout << '.' << *it;
     }
 
+    std::cout << std::endl;
+}
+
+// ============================================================
+// print_ip for tuples with all elements of the same type
+// Вывод: элементы кортежа, разделенные точкой
+// ============================================================
+template <typename T,
+          typename std::enable_if<traits::is_homogeneous_tuple<T>::value, int>::type = 0>
+void print_ip(const T& value) {
+    detail::print_tuple_impl(value);
     std::cout << std::endl;
 }
 
