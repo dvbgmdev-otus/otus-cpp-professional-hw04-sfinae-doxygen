@@ -1,6 +1,7 @@
 #ifndef IP_DETAIL_H
 #define IP_DETAIL_H
 
+#include <cstddef>
 #include <iostream>
 #include <tuple>
 
@@ -12,24 +13,46 @@ namespace ip {
 namespace detail {
 
 /** @ingroup implementation_details
- *  @brief Рекурсивно выводит элементы кортежа через точку.
- *
- *  Функция используется внутренней перегрузкой `print_ip` для
- *  однородных кортежей `std::tuple`.
+ *  @brief Рекурсивный вывод элементов кортежа через точку.
  *
  *  @tparam Tuple тип кортежа.
- *  @tparam Index индекс текущего элемента.
- *  @param tuple кортеж для вывода.
+ *  @tparam Index текущий индекс.
+ *  @tparam Size размер кортежа.
  */
-template <typename Tuple, std::size_t Index = 0>
-void print_tuple_impl(const Tuple& tuple) {
-    if constexpr (Index < std::tuple_size<Tuple>::value) {
+template <typename Tuple, std::size_t Index, std::size_t Size>
+struct tuple_printer {
+    static void print(const Tuple& tuple) {
         if (Index > 0) {
             std::cout << '.';
         }
+
         std::cout << std::get<Index>(tuple);
-        print_tuple_impl<Tuple, Index + 1>(tuple);
+        tuple_printer<Tuple, Index + 1, Size>::print(tuple);
     }
+};
+
+/** @ingroup implementation_details
+ *  @brief Базовый случай рекурсии вывода кортежа.
+ *
+ *  Специализация завершает рекурсивный вывод, когда Index == Size.
+ *
+ *  @tparam Tuple тип кортежа.
+ *  @tparam Size размер кортежа.
+ */
+template <typename Tuple, std::size_t Size>
+struct tuple_printer<Tuple, Size, Size> {
+    static void print(const Tuple&) {}
+};
+
+/** @ingroup implementation_details
+ *  @brief Запускает вывод однородного кортежа через точку.
+ *
+ *  @tparam Tuple тип кортежа.
+ *  @param tuple кортеж для вывода.
+ */
+template <typename Tuple>
+void print_tuple_impl(const Tuple& tuple) {
+    tuple_printer<Tuple, 0, std::tuple_size<Tuple>::value>::print(tuple);
 }
 
 }  // namespace detail
